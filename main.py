@@ -121,8 +121,8 @@ def do_tigge(today, slackmessenger):
     tigge_timedelta_days = os.environ.get("TIGGE_TIMEDELTA_DAYS")
     email = os.environ.get("TIGGE_EMAIL")
     key = os.environ.get("TIGGE_KEY")
-    n_workers = os.environ("N_WORKERS")
-    zero_dt = datetime.strptime(os.environ("TIGGE_ZERO_DT"), "%Y-%m-%d")
+    n_workers = os.environ.get("N_WORKERS")
+    zero_dt = datetime.strptime(os.environ.get("TIGGE_ZERO_DT"), "%Y-%m-%d")
 
     # 1. download tigge
     logger.info("downloading tigge")
