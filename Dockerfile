@@ -28,7 +28,7 @@ RUN apt-get update
 RUN apt-get install -y python3-pip
 
 # install binaries for cfgrib
-RUN apt-get install libeccodes0
+RUN apt-get install -y libeccodes0
 
 # Install production dependencies.
 RUN pip install --no-cache-dir -e ./h2ox-forecast
