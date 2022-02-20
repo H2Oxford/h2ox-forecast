@@ -169,7 +169,7 @@ def enqueue_tomorrow(today, forecast):
         cfg=cfg,
         payload=dict(today=tomorrow.isoformat()[0:10], forecast=forecast),
         task_name=tomorrow.isoformat()[0:10] + f"-{forecast}",
-        delay=24 * 3600,
+        delay=48 * 3600,
     )
 
     deploy_task(cfg, task)
