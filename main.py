@@ -1,13 +1,12 @@
 """h2ox-forecast - run daily"""
 
-import datetime
 import json
 import logging
 import os
 import sys
 import time
 import traceback
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from flask import Flask, request
 from loguru import logger
@@ -102,7 +101,7 @@ def run_daily():
     today_str = payload["today"]
     forecast = payload["forecast"]
 
-    today = datetime.datetime.strptime(today_str, "%Y-%m-%d").replace(tzinfo=None)
+    today = datetime.strptime(today_str, "%Y-%m-%d").replace(tzinfo=None)
 
     if forecast == "tigge":
         # do tigge stuff
