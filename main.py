@@ -85,6 +85,8 @@ def run_daily():
         return f"Bad Request: {msg}", 400
 
     logger.info("payload: " + json.dumps(payload))
+    logger.info("environ")
+    logger.info(f"{os.environ.keys()}")
 
     if not isinstance(payload, dict):
         msg = "invalid task format"
@@ -114,13 +116,13 @@ def run_daily():
 
 def do_tigge(today, slackmessenger):
 
-    tigge_store_path = os.environ["tigge-store-path"]
-    tigge_zarr_path = os.environ["tigge-zarr-path"]
-    tigge_timedelta_days = os.environ["tigge-timedelta-days"]
-    email = os.environ["tigge-email"]
-    key = os.environ["tigge-key"]
-    n_workers = os.environ["n-workers"]
-    zero_dt = datetime.strptime(os.environ["tigge-zero-dt"], "%Y-%m-%d")
+    tigge_store_path = os.environ.get("tigge-store-path")
+    tigge_zarr_path = os.environ.get("tigge-zarr-path")
+    tigge_timedelta_days = os.environ.get("tigge-timedelta-days")
+    email = os.environ("tigge-email")
+    key = os.environ("tigge-key")
+    n_workers = os.environ("n-workers")
+    zero_dt = datetime.strptime(os.environ("tigge-zero-dt"), "%Y-%m-%d")
 
     # 1. download tigge
     logger.info("downloading tigge")
@@ -151,11 +153,11 @@ def enqueue_tomorrow(today, forecast):
     tomorrow = today + timedelta(hours=24)
 
     cfg = dict(
-        project=os.environ["project"],
-        queue=os.environ["queue"],  # queue name
-        location=os.environ["location"],  # queue
-        url=os.environ["url"],  # service url
-        service_account=os.environ["service_account"],  # service acct
+        project=os.environ.get("project"),
+        queue=os.environ.get("queue"),  # queue name
+        location=os.environ.get("location"),  # queue
+        url=os.environ.get("url"),  # service url
+        service_account=os.environ.get("service_account"),  # service acct
     )
 
     task = create_task(
