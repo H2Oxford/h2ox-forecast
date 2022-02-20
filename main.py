@@ -130,7 +130,9 @@ def do_tigge(today, slackmessenger):
     logger.info("downloading tigge")
     fpath = download_tigge(today, tigge_timedelta_days, email, key, ecmwf_url)
     if slackmessenger is not None:
-        slackmessenger.message(f"downloaded {(today+timedelta(hours=24)).isoformat()}")
+        slackmessenger.message(
+            f"downloaded {today.isoformat()[0:10]}-{(today+timedelta(days=tigge_timedelta_days)).isoformat()[0:10]}"
+        )
     # 2. push .grib to storage
     remote_path = os.path.join(tigge_store_path, os.path.split(fpath)[-1])
     logger.info(f"storing tigge {fpath} to {tigge_store_path}")
@@ -144,7 +146,9 @@ def do_tigge(today, slackmessenger):
     # 4. enque tomorrow's grib
     enqueue_tomorrow(today, "tigge")
     if slackmessenger is not None:
-        slackmessenger.message(f"enqueued {(today+timedelta(hours=24)).isoformat()}")
+        slackmessenger.message(
+            f"enqueued {(today+timedelta(days=tigge_timedelta_days)).isoformat()}"
+        )
 
     return 1
 
