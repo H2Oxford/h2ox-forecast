@@ -117,7 +117,7 @@ def do_tigge(today, slackmessenger):
 
     tigge_store_path = os.environ.get("TIGGE_STORE_PATH")
     tigge_zarr_path = os.environ.get("TIGGE_ZARR_PATH")
-    tigge_timedelta_days = os.environ.get("TIGGE_TIMEDELTA_DAYS")
+    tigge_timedelta_days = int(os.environ.get("TIGGE_TIMEDELTA_DAYS"))
     email = os.environ.get("TIGGE_EMAIL")
     key = os.environ.get("TIGGE_KEY")
     n_workers = os.environ.get("N_WORKERS")
@@ -128,7 +128,6 @@ def do_tigge(today, slackmessenger):
     fpath = download_tigge(today, tigge_timedelta_days, email, key)
     if slackmessenger is not None:
         slackmessenger.message(f"downloaded {(today+timedelta(hours=24)).isoformat()}")
-
     # 2. push .grib to storage
     remote_path = os.path.join(tigge_store_path, os.path.split(fpath)[-1])
     logger.info(f"storing tigge {fpath} to {tigge_store_path}")
