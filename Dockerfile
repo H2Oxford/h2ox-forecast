@@ -15,7 +15,7 @@ COPY ./main.py $APP_HOME/
 WORKDIR $APP_HOME
 
 # Copy local code to the container image.
-# __context__ to __workdir__ 
+# __context__ to __workdir__
 COPY . ./h2ox-forecast
 # Install GDAL dependencies
 
@@ -26,6 +26,10 @@ RUN echo $(ls)
 
 RUN apt-get update
 RUN apt-get install -y python3-pip
+
+# install binaries for cfgrib
+RUN apt-get install libeccodes0
+
 # Install production dependencies.
 RUN pip install --no-cache-dir -e ./h2ox-forecast
 
