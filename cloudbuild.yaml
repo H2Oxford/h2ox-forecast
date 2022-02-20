@@ -1,6 +1,6 @@
 steps:
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '--progress=plain', '-t', 'gcr.io/$PROJECT_ID/h2ox-w2w','.']
+  args: ['build', '--progress=plain', '-t', 'gcr.io/$PROJECT_ID/h2ox-forecast','.']
 - name: 'bash'
   args: ['ls', '..', '-a']
 - name: 'bash'
@@ -8,4 +8,4 @@ steps:
 - name: 'bash'
   args: ['ls', '/']
 images:
-- 'gcr.io/$PROJECT_ID/h2ox-w2w'
+- 'gcr.io/$PROJECT_ID/h2ox-forecast'
