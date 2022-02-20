@@ -116,13 +116,13 @@ def run_daily():
 
 def do_tigge(today, slackmessenger):
 
-    tigge_store_path = os.environ.get("tigge-store-path")
-    tigge_zarr_path = os.environ.get("tigge-zarr-path")
-    tigge_timedelta_days = os.environ.get("tigge-timedelta-days")
-    email = os.environ("tigge-email")
-    key = os.environ("tigge-key")
-    n_workers = os.environ("n-workers")
-    zero_dt = datetime.strptime(os.environ("tigge-zero-dt"), "%Y-%m-%d")
+    tigge_store_path = os.environ.get("TIGGE_STORE_PATH")
+    tigge_zarr_path = os.environ.get("TIGGE_ZARR_PATH")
+    tigge_timedelta_days = os.environ.get("TIGGE_TIMEDELTA_DAYS")
+    email = os.environ.get("TIGGE_EMAIL")
+    key = os.environ.get("TIGGE_KEY")
+    n_workers = os.environ("N_WORKERS")
+    zero_dt = datetime.strptime(os.environ("TIGGE_ZERO_DT"), "%Y-%m-%d")
 
     # 1. download tigge
     logger.info("downloading tigge")
