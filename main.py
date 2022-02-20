@@ -107,6 +107,8 @@ def run_daily():
         # do tigge stuff
         do_tigge(today, slackmessenger)
 
+        return f"Ran day {today.isoformat()[0:10]}", 200
+
     elif forecast == "hres":
         # do hres stuff
 
@@ -144,7 +146,7 @@ def do_tigge(today, slackmessenger):
     if slackmessenger is not None:
         slackmessenger.message(f"enqueued {(today+timedelta(hours=24)).isoformat()}")
 
-    return f"Ran day {today.isoformat()[0:10]}", 200
+    return 1
 
 
 def enqueue_tomorrow(today, forecast):
@@ -167,3 +169,5 @@ def enqueue_tomorrow(today, forecast):
     )
 
     deploy_task(cfg, task)
+
+    return 1
