@@ -120,6 +120,7 @@ def do_tigge(today, slackmessenger):
     tigge_store_path = os.environ.get("TIGGE_STORE_PATH")
     tigge_zarr_path = os.environ.get("TIGGE_ZARR_PATH")
     tigge_timedelta_days = int(os.environ.get("TIGGE_TIMEDELTA_DAYS"))
+    token_path = os.environ.get("TIGGE_TOKEN_PATH")
     email = os.environ.get("TIGGE_EMAIL")
     key = os.environ.get("TIGGE_KEY")
     ecmwf_url = os.environ.get("ECMWF_URL")
@@ -131,7 +132,7 @@ def do_tigge(today, slackmessenger):
     fpath = download_tigge(today, tigge_timedelta_days, email, key, ecmwf_url)
     if slackmessenger is not None:
         slackmessenger.message(
-            f"downloaded {today.isoformat()[0:10]}-{(today+timedelta(days=tigge_timedelta_days)).isoformat()[0:10]}"
+            f"TIGGE ::: downloaded {today.isoformat()[0:10]}-{(today+timedelta(days=tigge_timedelta_days)).isoformat()[0:10]}"
         )
     # 2. push .grib to storage
     remote_path = os.path.join(tigge_store_path, os.path.split(fpath)[-1])
@@ -143,11 +144,17 @@ def do_tigge(today, slackmessenger):
     ingest_local_grib(fpath, tigge_zarr_path, n_workers, zero_dt)
     logger.info(f"done ingesting tigge {fpath} to {tigge_zarr_path}")
 
+    # 4. push a token to storage
+    local_token_path = os.path.join(os.getcwd(), "token.json")
+    token = {"most_recent_tigge": today.isoformat()[0:10]}
+    json.dump(token, open(local_token_path, "w"))
+    upload_blob(local_token_path, token_path)
+
     # 4. enque tomorrow's grib
     enqueue_tomorrow(today, "tigge")
     if slackmessenger is not None:
         slackmessenger.message(
-            f"enqueued {(today+timedelta(days=tigge_timedelta_days)).isoformat()}"
+            f"TIGGE ::: Done, enqueued {(today+timedelta(days=tigge_timedelta_days)).isoformat()}"
         )
 
     return 1
@@ -155,7 +162,7 @@ def do_tigge(today, slackmessenger):
 
 def enqueue_tomorrow(today, forecast):
 
-    tomorrow = today + timedelta(hours=24)
+    tomorrow = today + timedelta(hours=48)  # every two days
 
     cfg = dict(
         project=os.environ.get("project"),
