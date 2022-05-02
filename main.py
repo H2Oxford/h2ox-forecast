@@ -146,7 +146,7 @@ def do_tigge(today, slackmessenger):
 
     # 4. push a token to storage
     local_token_path = os.path.join(os.getcwd(), "token.json")
-    token = {"most_recent_tigge": today.isoformat()[0:10]}
+    token = {"most_recent_tigge": (today + timedelta(hours=24)).isoformat()[0:10]}
     json.dump(token, open(local_token_path, "w"))
     upload_blob(local_token_path, token_path)
 
