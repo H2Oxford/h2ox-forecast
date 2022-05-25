@@ -82,7 +82,7 @@ Environment variables can be put in a `.env` file and passed to the docker conta
 
 [xarray](https://docs.xarray.dev/en/stable/) can be used with a zarr backend to lazily access very large zarr archives.
 
-<img alt="Zarr Xarray" width="600px" src="https://github.com/H2Oxford/.github/raw/main/profile/img/zarr_chirps.png"/>
+<img alt="Zarr Xarray" width="600px" src="https://github.com/H2Oxford/.github/raw/main/profile/img/zarr_tigge.png"/>
 
 
 ## Citation
