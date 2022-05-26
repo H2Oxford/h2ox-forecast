@@ -92,11 +92,18 @@ def run_daily():
         print(f"error: {msg}")
         return f"Bad Request: {msg}", 400
 
-    slackmessenger = SlackMessenger(
-        token=os.environ.get("SLACKBOT_TOKEN"),
-        target=os.environ.get("SLACKBOT_TARGET"),
-        name="w2w-forecast",
-    )
+    token = os.environ.get("SLACKBOT_TOKEN")
+    target = os.environ.get("SLACKBOT_TARGET")
+
+    if target is not None and token is not None:
+
+        slackmessenger = SlackMessenger(
+            token=token,
+            target=target,
+            name="w2w-forecast",
+        )
+    else:
+        slackmessenger = None
 
     today_str = payload["today"]
     forecast = payload["forecast"]
@@ -126,6 +133,7 @@ def do_tigge(today, slackmessenger):
     ecmwf_url = os.environ.get("ECMWF_URL")
     n_workers = int(os.environ.get("N_WORKERS"))
     zero_dt = datetime.strptime(os.environ.get("TIGGE_ZERO_DT"), "%Y-%m-%d")
+    requeue = str(os.environ.get("REQUEUE")).lower() == "true"
 
     # 1. download tigge
     logger.info("downloading tigge")
@@ -151,7 +159,8 @@ def do_tigge(today, slackmessenger):
     upload_blob(local_token_path, token_path)
 
     # 4. enque tomorrow's grib
-    enqueue_tomorrow(today, "tigge")
+    if requeue:
+        enqueue_tomorrow(today, "tigge")
     if slackmessenger is not None:
         slackmessenger.message(
             f"TIGGE ::: Done, enqueued {(today+timedelta(days=tigge_timedelta_days)).isoformat()}"
