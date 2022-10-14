@@ -13,7 +13,7 @@ from loguru import logger
 
 from h2ox.forecast import download_tigge, ingest_local_grib
 from h2ox.forecast.slackbot import SlackMessenger
-from h2ox.forecast.utils import create_task, deploy_task, upload_blob
+from h2ox.forecast.utils import create_task, deploy_task, upload_blob, download_cloud_json
 
 app = Flask(__name__)
 
