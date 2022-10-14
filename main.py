@@ -133,11 +133,17 @@ def do_tigge(today, slackmessenger):
     ecmwf_url = os.environ.get("ECMWF_URL")
     n_workers = int(os.environ.get("N_WORKERS"))
     zero_dt = datetime.strptime(os.environ.get("TIGGE_ZERO_DT"), "%Y-%m-%d")
-    requeue = str(os.environ.get("REQUEUE")).lower() == "true"
 
     # 1. download tigge
     logger.info("downloading tigge")
-    fpath = download_tigge(today, tigge_timedelta_days, email, key, ecmwf_url)
+    forecast_token = download_cloud_json(token_path)
+    print ('TOKEN')
+    print (forecast_token)
+    start_dt = datetime.strptime(forecast_token['most_recent_tigge'],'%Y-%m-%d')
+    
+    end_dt = today - timedelta(days=tigge_timedelta_days)
+    fpath = download_tigge(start_dt, end_dt, email, key, ecmwf_url)
+    #fpath = os.path.join(os.getcwd(),f'{start_dt.isoformat()[0:10]}_{end_dt.isoformat()[0:10]}.grib')
     if slackmessenger is not None:
         slackmessenger.message(
             f"TIGGE ::: downloaded {today.isoformat()[0:10]}-{(today+timedelta(days=tigge_timedelta_days)).isoformat()[0:10]}"
@@ -158,16 +164,13 @@ def do_tigge(today, slackmessenger):
     json.dump(token, open(local_token_path, "w"))
     upload_blob(local_token_path, token_path)
 
-    # 4. enque tomorrow's grib
-    if requeue:
-        enqueue_tomorrow(today, "tigge")
+
     if slackmessenger is not None:
         slackmessenger.message(
             f"TIGGE ::: Done, enqueued {(today+timedelta(days=tigge_timedelta_days)).isoformat()}"
         )
 
-    return 1
-
+    return "Ingesting TIGGE Compelte", 200
 
 def enqueue_tomorrow(today, forecast):
 
