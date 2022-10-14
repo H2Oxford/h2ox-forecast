@@ -136,6 +136,7 @@ def do_tigge(today, slackmessenger):
 
     # 1. download tigge
     logger.info("downloading tigge")
+    print ('TOKEN PATH',token_path)
     forecast_token = download_cloud_json(token_path)
     print ('TOKEN')
     print (forecast_token)

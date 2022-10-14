@@ -158,7 +158,7 @@ def upload_blob(source_directory: str, target_directory: str):
 
     return target_directory
 
-def download_cloud_json(bucket_name: str, filename: str, **kwargs) -> Dict:
+def download_cloud_json(target_file: str, **kwargs) -> Dict:
     """
     Function to load the json data for the WorldFloods bucket using the filename
     corresponding to the image file name. The filename corresponds to the full
@@ -172,10 +172,14 @@ def download_cloud_json(bucket_name: str, filename: str, **kwargs) -> Dict:
     """
     # initialize client
     client = storage.Client(**kwargs)
+
+    bucket_id = target_file.split("/")[0]
+    file_path = "/".join(target_file.split("/")[1:])
+
     # get bucket
-    bucket = client.get_bucket(bucket_name)
+    bucket = client.get_bucket(bucket_id)
     # get blob
-    blob = bucket.blob(filename)
+    blob = bucket.blob(file_path)
     # check if it exists
     # TODO: wrap this within a context
     return json.loads(blob.download_as_string(client=None))

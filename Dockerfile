@@ -36,5 +36,4 @@ WORKDIR $APP_HOME
 # For environments with multiple CPU cores, increase the number of workers
 # to be equal to the cores available.
 # Timeout is set to 0 to disable the timeouts of the workers to allow Cloud Run to handle instance scaling.
-#CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 main:app
-CMD python batch.py
+CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 main:app
