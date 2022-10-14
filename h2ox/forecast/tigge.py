@@ -13,21 +13,19 @@ from ecmwfapi import ECMWFDataServer
 from loguru import logger
 
 
-def download_tigge(today, timedelta_days, email, key, ecmwf_url):
+def download_tigge(start_dt, end_dt, email, key, ecmwf_url):
 
     server = ECMWFDataServer(email=email, key=key, url=ecmwf_url)
 
-    end_dt = today + timedelta(days=timedelta_days)
-
     fname = os.path.join(
-        os.getcwd(), f"{today.isoformat()[0:10]}_{end_dt.isoformat()[0:10]}.grib"
+        os.getcwd(), f"{start_dt.isoformat()[0:10]}_{end_dt.isoformat()[0:10]}.grib"
     )
 
     server.retrieve(
         {
             "class": "ti",
             "dataset": "tigge",
-            "date": f"{today.year}-{today.month:02d}-{today.day:02d}/to/{end_dt.year}-{end_dt.month:02d}-{end_dt.day:02d}",
+            "date": f"{start_dt.year}-{start_dt.month:02d}-{start_dt.day:02d}/to/{end_dt.year}-{end_dt.month:02d}-{end_dt.day:02d}",
             "expver": "prod",
             "grid": "0.5/0.5",
             "levtype": "sfc",
