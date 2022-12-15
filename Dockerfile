@@ -21,6 +21,7 @@ COPY . h2ox-forecast
 RUN apt-get update
 RUN apt-get install -y python3-pip
 RUN apt-get install -y libeccodes0
+RUN pip install --upgrade pip
 
 RUN echo $PWD
 
