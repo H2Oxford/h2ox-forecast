@@ -147,7 +147,7 @@ def do_tigge(today, slackmessenger):
     #fpath = os.path.join(os.getcwd(),f'{start_dt.isoformat()[0:10]}_{end_dt.isoformat()[0:10]}.grib')
     if slackmessenger is not None:
         slackmessenger.message(
-            f"TIGGE ::: downloaded {today.isoformat()[0:10]}-{(today+timedelta(days=tigge_timedelta_days)).isoformat()[0:10]}"
+            f"TIGGE ::: downloaded {start_dt.isoformat()} - {end_dt.isoformat()}"
         )
     # 2. push .grib to storage
     remote_path = os.path.join(tigge_store_path, os.path.split(fpath)[-1])
@@ -161,14 +161,14 @@ def do_tigge(today, slackmessenger):
 
     # 4. push a token to storage
     local_token_path = os.path.join(os.getcwd(), "token.json")
-    token = {"most_recent_tigge": (today + timedelta(hours=24)).isoformat()[0:10]}
+    token = {"most_recent_tigge": (end_dt+timedelta(hours=24)).isoformat()[0:10]}
     json.dump(token, open(local_token_path, "w"))
     upload_blob(local_token_path, token_path)
 
 
     if slackmessenger is not None:
         slackmessenger.message(
-            f"TIGGE ::: Done, enqueued {(today+timedelta(days=tigge_timedelta_days)).isoformat()}"
+            f"TIGGE ::: Done {start_dt.isoformat()} - {end_dt.isoformat()}"
         )
 
     return "Ingesting TIGGE Compelte", 200
