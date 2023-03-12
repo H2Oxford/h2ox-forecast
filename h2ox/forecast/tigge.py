@@ -121,7 +121,7 @@ def ingest_local_grib(grib_path, gcs_root, n_workers, zero_dt):
             
             # open the zarr
             mapper = GCSFileSystem(requester_pays=True).get_mapper
-            z = zarr.open(mapper(gcs_path), "r+")
+            z = zarr.open(mapper(gcs_root), "r+")
 
             # write each slice
             for ii_s, s in enumerate(slices):
