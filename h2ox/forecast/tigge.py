@@ -5,6 +5,7 @@ from multiprocessing.shared_memory import SharedMemory
 
 import dask.array
 import gcsfs
+from gcsfs import GCSFileSystem
 import numpy as np
 import pandas as pd
 import xarray as xr
@@ -119,8 +120,8 @@ def ingest_local_grib(grib_path, gcs_root, n_workers, zero_dt):
         else:
             
             # open the zarr
-            store = gcsfs.GCSMap(root=gcs_root)
-            z = zarr.open(store)
+            mapper = GCSFileSystem(requester_pays=True).get_mapper
+            z = zarr.open(mapper(gcs_path), "r+")
 
             # write each slice
             for ii_s, s in enumerate(slices):
@@ -145,9 +146,9 @@ def sharedmem_worker(shm_spec, variable, gcs_path, slices, time_offset, worker_i
         shm_spec["shape"], dtype=shm_spec["dtype"], buffer=existing_shm.buf
     )
 
-    # open the zarr
-    store = gcsfs.GCSMap(root=gcs_path)
-    z = zarr.open(store)
+    # open the zarr    
+    mapper = GCSFileSystem(requester_pays=True).get_mapper
+    z = zarr.open(mapper(gcs_path), "r+")
 
     # write each slice
     for ii_s, s in enumerate(slices):
